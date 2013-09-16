@@ -3,6 +3,7 @@
 
   // The target to communicate with
   var origin = context.parent.location.origin;
+  var baseDir = 'noflo-runtime-iframe';
 
   var graph = null;
 
@@ -23,12 +24,15 @@
       case 'network':
         networkCommand(message.data.command, message.data.payload);
         break;
+      case 'component':
+        componentCommand(message.data.command, message.data.payload);
+        break;
     };
   });
 
   function initGraph () {
     var graph = new noflo.Graph('IFRAME runtime');
-    graph.baseDir = 'noflo-runtime-iframe';
+    graph.baseDir = baseDir;
 
     graph.on('addNode', function (node) {
       send('graph', 'addnode', node);
@@ -76,6 +80,40 @@
     switch (command) {
       case 'start':
         initNetwork(graph);
+        break;
+    }
+  };
+
+  function sendComponent (component, instance) {
+    send('component', 'component', {
+      name: component,
+      description: instance.description,
+      inPorts: Object.keys(instance.inPorts),
+      outPorts: Object.keys(instance.outPorts)
+    });
+  };
+
+  function listComponents () {
+    var loader = new noflo.ComponentLoader(baseDir);
+    loader.listComponents(function (components) {
+      Object.keys(components).forEach(function (component) {
+        loader.load(component, function (instance) {
+          if (!instance.isReady()) {
+            instance.once('ready', function () {
+              sendComponent(component, instance);
+            });
+            return;
+          }
+          sendComponent(component, instance);
+        });
+      });
+    });
+  };
+
+  function componentCommand (command, payload) {
+    switch (command) {
+      case 'list':
+        listComponents();
         break;
     }
   };

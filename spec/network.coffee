@@ -85,3 +85,23 @@ describe 'IFRAME network runtime', ->
           done()
         window.addEventListener 'message', listener, false
         send 'network', 'start'
+
+  describe 'Component protocol', ->
+    describe 'on requesting a component list', ->
+      it 'should receive some known components', (done) ->
+        listener = (message) ->
+          chai.expect(message).to.be.an 'object'
+          chai.expect(message.data.protocol).to.equal 'component'
+          chai.expect(message.data.payload).to.be.an 'object'
+          if message.data.payload.name is 'core/Output'
+            chai.expect(message.data.payload.inPorts).to.include.members [
+              'in'
+              'options'
+            ]
+            chai.expect(message.data.payload.outPorts).to.include.members [
+              'out'
+            ]
+            window.removeEventListener 'message', listener, false
+            done()
+        window.addEventListener 'message', listener, false
+        send 'component', 'list'
