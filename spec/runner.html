@@ -14,12 +14,14 @@
     <div id="mocha"></div>
     <div id="fixtures">
       <iframe src="../html/component.html?core/Repeat" id="componentRepeat"></iframe>
+      <iframe src="../html/network.html" id="network"></iframe>
     </div>
     <script src="../browser/noflo-runtime-iframe.js"></script>
     <script src="http://chaijs.com/chai.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
     <script>mocha.setup('bdd');</script>
     <script src="./component.js"></script>
+    <script src="./network.js"></script>
     <script>
       if (window.mochaPhantomJS) {
         mochaPhantomJS.run();

@@ -18,6 +18,8 @@
   ],
   "files": [
     "runtime/component.js",
-    "html/component.html"
+    "html/component.html",
+    "runtime/network.js",
+    "html/network.html"
   ]
 }
