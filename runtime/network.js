@@ -5,7 +5,6 @@
   var origin = context.parent.location.origin;
 
   var graph = null;
-  var network = null;
 
   context.addEventListener('message', function (message) {
     if (message.origin !== origin) {
@@ -20,6 +19,9 @@
     switch (message.data.protocol) {
       case 'graph':
         graphCommand(message.data.command, message.data.payload);
+        break;
+      case 'network':
+        networkCommand(message.data.command, message.data.payload);
         break;
     };
   });
@@ -39,7 +41,7 @@
     });
 
     return graph;
-  }
+  };
 
   function graphCommand (command, payload) {
     switch (command) {
@@ -54,6 +56,26 @@
         break;
       case 'addinitial':
         graph.addInitial(payload.from.data, payload.to.node, payload.to.port, payload.metadata);
+        break;
+    }
+    return graph;
+  };
+
+  function initNetwork (graph) {
+    noflo.createNetwork(graph, function (network) {
+      network.on('start', function (event) {
+        send('network', 'start', event.start);
+      });
+      network.on('stop', function (event) {
+        send('network', 'stop', event.uptime);
+      });
+    });
+  };
+
+  function networkCommand (command, payload) {
+    switch (command) {
+      case 'start':
+        initNetwork(graph);
         break;
     }
   };

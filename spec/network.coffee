@@ -66,9 +66,22 @@ describe 'IFRAME network runtime', ->
             from:
               data: 'Hello, world!'
             to:
-              node: 'Bar'
+              node: 'Foo'
               port: 'in'
             metadata: {}
         ]
         receive expects, done
         send 'graph', 'addinitial', expects[0].payload
+
+  describe 'Network protocol', ->
+    describe 'on starting the network', ->
+      it 'should get started', (done) ->
+        listener = (message) ->
+          chai.expect(message).to.be.an 'object'
+          chai.expect(message.data.protocol).to.equal 'network'
+          chai.expect(message.data.command).to.equal 'start'
+          chai.expect(message.data.payload).to.be.a 'date'
+          window.removeEventListener 'message', listener, false
+          done()
+        window.addEventListener 'message', listener, false
+        send 'network', 'start'
