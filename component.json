@@ -1,0 +1,23 @@
+{
+  "name": "noflo-runtime-iframe",
+  "description": "NoFlo runtime for execution inside an iframe",
+  "author": "Henri Bergius <henri.bergius@iki.fi>",
+  "repo": "bergie/noflo-runtime-iframe",
+  "version": "0.1.0",
+  "keywords": [
+  ],
+  "dependencies": {
+    "noflo/noflo": "*",
+    "noflo/noflo-core": "*"
+  },
+  "scripts": [
+    "index.js"
+  ],
+  "json": [
+    "component.json"
+  ],
+  "files": [
+    "runtime/component.js",
+    "html/component.html"
+  ]
+}
