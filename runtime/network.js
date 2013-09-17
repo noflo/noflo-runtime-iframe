@@ -102,6 +102,9 @@
       });
       network.connect(function () {
         network.sendInitials();
+        graph.on('addInitial', function () {
+          network.sendInitials();
+        });
       });
     }, true);
   };
