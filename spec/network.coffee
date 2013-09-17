@@ -37,7 +37,8 @@ describe 'IFRAME network runtime', ->
               metadata: {}
         ]
         receive expects, done
-        send 'graph', 'graph', null
+        send 'graph', 'graph',
+          baseDir: '/noflo-runtime-iframe'
         send 'graph', 'addnode', expects[0].payload
         send 'graph', 'addnode', expects[1].payload
     describe 'receiving an edge', ->
@@ -139,7 +140,8 @@ describe 'IFRAME network runtime', ->
         window.removeEventListener 'message', listener, false
         done()
       window.addEventListener 'message', listener, false
-      send 'graph', 'graph'
+      send 'graph', 'graph',
+        baseDir: '/noflo-runtime-iframe'
       send 'graph', 'addnode',
         id: 'Hello'
         component: 'core/Repeat'
@@ -171,7 +173,8 @@ describe 'IFRAME network runtime', ->
           window.removeEventListener 'message', listener, false
           done()
         window.addEventListener 'message', listener, false
-        send 'network', 'start'
+        send 'network', 'start',
+          baseDir: '/noflo-runtime-iframe'
 
   describe 'Component protocol', ->
     describe 'on requesting a component list', ->
@@ -181,14 +184,18 @@ describe 'IFRAME network runtime', ->
           chai.expect(message.data.protocol).to.equal 'component'
           chai.expect(message.data.payload).to.be.an 'object'
           if message.data.payload.name is 'core/Output'
-            chai.expect(message.data.payload.inPorts).to.include.members [
-              'in'
-              'options'
+            chai.expect(message.data.payload.inPorts).to.eql [
+              id: 'in'
+              type: 'all'
+            ,
+              id: 'options'
+              type: 'all'
             ]
-            chai.expect(message.data.payload.outPorts).to.include.members [
-              'out'
+            chai.expect(message.data.payload.outPorts).to.eql [
+              id: 'out'
+              type: 'all'
             ]
             window.removeEventListener 'message', listener, false
             done()
         window.addEventListener 'message', listener, false
-        send 'component', 'list'
+        send 'component', 'list', '/noflo-runtime-iframe'

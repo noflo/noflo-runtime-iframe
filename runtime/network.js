@@ -30,7 +30,7 @@
     };
   });
 
-  function initGraph () {
+  function initGraph (baseDir) {
     var graph = new noflo.Graph('IFRAME runtime');
     graph.baseDir = baseDir;
 
@@ -65,7 +65,7 @@
   function graphCommand (command, payload) {
     switch (command) {
       case 'graph':
-        graph = initGraph();
+        graph = initGraph(payload.baseDir);
         break;
       case 'addnode':
         graph.addNode(payload.id, payload.component, payload.metadata);
@@ -115,15 +115,29 @@
   };
 
   function sendComponent (component, instance) {
+    var inPorts = [];
+    var outPorts = [];
+    for (port in instance.inPorts) {
+      inPorts.push({
+        id: port,
+        type: instance.inPorts[port].type
+      });
+    }
+    for (port in instance.outPorts) {
+      outPorts.push({
+        id: port,
+        type: instance.outPorts[port].type
+      });
+    }
     send('component', 'component', {
       name: component,
       description: instance.description,
-      inPorts: Object.keys(instance.inPorts),
-      outPorts: Object.keys(instance.outPorts)
+      inPorts: inPorts,
+      outPorts: outPorts
     });
   };
 
-  function listComponents () {
+  function listComponents (baseDir) {
     var loader = new noflo.ComponentLoader(baseDir);
     loader.listComponents(function (components) {
       Object.keys(components).forEach(function (component) {
@@ -143,7 +157,7 @@
   function componentCommand (command, payload) {
     switch (command) {
       case 'list':
-        listComponents();
+        listComponents(payload);
         break;
     }
   };
