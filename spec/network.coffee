@@ -168,10 +168,10 @@ describe 'IFRAME network runtime', ->
         listener = (message) ->
           chai.expect(message).to.be.an 'object'
           chai.expect(message.data.protocol).to.equal 'network'
-          chai.expect(message.data.command).to.equal 'start'
-          chai.expect(message.data.payload).to.be.a 'date'
-          window.removeEventListener 'message', listener, false
-          done()
+          if message.data.command is 'start'
+            chai.expect(message.data.payload).to.be.a 'date'
+            window.removeEventListener 'message', listener, false
+            done()
         window.addEventListener 'message', listener, false
         send 'network', 'start',
           baseDir: '/noflo-runtime-iframe'

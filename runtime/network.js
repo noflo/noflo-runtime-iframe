@@ -97,6 +97,51 @@
       network.on('start', function (event) {
         send('network', 'start', event.start);
       });
+
+      prepareSocketEvent = function (event) {
+        var data = {
+          id: event.id
+        };
+        if (event.socket.from) {
+          data.from = {
+            node: event.socket.from.process.id,
+            port: event.socket.from.port
+          };
+        }
+        if (event.socket.to) {
+          data.to = {
+            node: event.socket.to.process.id,
+            port: event.socket.to.port
+          };
+        }
+        if (event.group) {
+          data.group = event.group;
+        }
+        if (event.data) {
+          data.data = event.data;
+        }
+        if (event.subgraph) {
+          data.subgraph = event.subgraph;
+        }
+        return data;
+      };
+
+      network.on('connect', function (event) {
+        send('network', 'connect', prepareSocketEvent(event));
+      });
+      network.on('begingroup', function (event) {
+        send('network', 'begingroup', prepareSocketEvent(event));
+      });
+      network.on('data', function (event) {
+        send('network', 'data', prepareSocketEvent(event));
+      });
+      network.on('endgroup', function (event) {
+        send('network', 'endgroup', prepareSocketEvent(event));
+      });
+      network.on('disconnect', function (event) {
+        send('network', 'disconnect', prepareSocketEvent(event));
+      });
+
       network.on('stop', function (event) {
         send('network', 'stop', event.uptime);
       });
