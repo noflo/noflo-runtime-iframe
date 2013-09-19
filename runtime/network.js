@@ -64,7 +64,7 @@
 
   function graphCommand (command, payload) {
     switch (command) {
-      case 'graph':
+      case 'clear':
         graph = initGraph(payload.baseDir);
         break;
       case 'addnode':
@@ -118,7 +118,13 @@
           data.group = event.group;
         }
         if (event.data) {
-          data.data = event.data;
+          if (event.data.toJSON) {
+            data.data = event.data.toJSON();
+          } else if (event.data.toString) {
+            data.data = event.data.toString();
+          } else {
+            data.data = event.data;
+          }
         }
         if (event.subgraph) {
           data.subgraph = event.subgraph;

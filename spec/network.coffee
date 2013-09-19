@@ -37,7 +37,7 @@ describe 'IFRAME network runtime', ->
               metadata: {}
         ]
         receive expects, done
-        send 'graph', 'graph',
+        send 'graph', 'clear',
           baseDir: '/noflo-runtime-iframe'
         send 'graph', 'addnode', expects[0].payload
         send 'graph', 'addnode', expects[1].payload
@@ -140,7 +140,7 @@ describe 'IFRAME network runtime', ->
         window.removeEventListener 'message', listener, false
         done()
       window.addEventListener 'message', listener, false
-      send 'graph', 'graph',
+      send 'graph', 'clear',
         baseDir: '/noflo-runtime-iframe'
       send 'graph', 'addnode',
         id: 'Hello'
