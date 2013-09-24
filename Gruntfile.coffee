@@ -48,5 +48,5 @@ module.exports = ->
 
   # Our local tasks
   @registerTask 'build', ['exec']
-  @registerTask 'test', ['coffeelint', 'build', 'mocha_phantomjs']
+  @registerTask 'test', ['coffeelint', 'build', 'coffee', 'mocha_phantomjs']
   @registerTask 'default', ['test']

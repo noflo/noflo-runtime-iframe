@@ -8,6 +8,7 @@
   ],
   "dependencies": {
     "noflo/noflo": "*",
+    "noflo/noflo-runtime-base": "*",
     "noflo/noflo-core": "*"
   },
   "scripts": [
