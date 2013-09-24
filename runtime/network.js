@@ -1,6 +1,6 @@
 (function (context) {
-  var noflo = context.require('/noflo');
-  var Base = context.require('/noflo-runtime-base');
+  var noflo = context.require('noflo');
+  var Base = context.require('noflo-noflo-runtime-base');
 
   var Iframe = function () {
     this.prototype.constructor.apply(this, arguments);
