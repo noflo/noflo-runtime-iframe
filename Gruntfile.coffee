@@ -19,7 +19,7 @@ module.exports = ->
       install:
         command: './node_modules/.bin/component install -d'
       build:
-        command: './node_modules/.bin/component build -u component-json,component-coffee -o browser -n noflo-runtime-iframe -c -d'
+        command: './node_modules/.bin/component build -u component-json,component-coffee -o browser -n noflo-runtime-iframe -d'
 
     # Automated recompilation and testing when developing
     watch:
