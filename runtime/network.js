@@ -8,6 +8,11 @@
   };
   Iframe.prototype = Base;
   Iframe.prototype.send = function (protocol, topic, payload, ctx) {
+    if (payload instanceof Error) {
+      payload = {
+        message: payload.toString()
+      };
+    }
     context.parent.postMessage({
       protocol: protocol,
       command: topic,
