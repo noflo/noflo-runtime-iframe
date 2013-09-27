@@ -2,7 +2,22 @@
   var noflo = context.require('noflo');
   var Base = context.require('noflo-noflo-runtime-base');
 
-  var Iframe = function () {
+  var Iframe = function (options) {
+    if (!options) {
+      options = {};
+    }
+
+    if (options.catchExceptions) {
+      context.onerror = function (err) {
+        this.send('network', 'error', {
+          message: err.toString()
+        }, {
+          href: context.parent.location.href
+        });
+        return true;
+      }.bind(this);
+    }
+
     this.prototype.constructor.apply(this, arguments);
     this.receive = this.prototype.receive;
   };
@@ -19,7 +34,9 @@
       payload: payload
     }, ctx.href);
   };
-  var runtime = new Iframe();
+  var runtime = new Iframe({
+    catchExceptions: true
+  });
 
   context.addEventListener('message', function (message) {
     if (message.origin !== context.parent.location.origin) {
