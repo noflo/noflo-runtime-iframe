@@ -164,12 +164,16 @@ describe 'IFRAME network runtime', ->
           node: 'Hello'
           port: 'in'
     describe 'on starting the network', ->
-      it 'should get started', (done) ->
+      it 'should get started and stopped', (done) ->
+        started = false
         listener = (message) ->
           chai.expect(message).to.be.an 'object'
           chai.expect(message.data.protocol).to.equal 'network'
-          if message.data.command is 'start'
+          if message.data.command is 'started'
             chai.expect(message.data.payload).to.be.a 'date'
+            started = true
+          if message.data.command is 'stopped'
+            chai.expect(started).to.equal true
             window.removeEventListener 'message', listener, false
             done()
         window.addEventListener 'message', listener, false
@@ -187,13 +191,16 @@ describe 'IFRAME network runtime', ->
             chai.expect(message.data.payload.inPorts).to.eql [
               id: 'in'
               type: 'all'
+              array: true
             ,
               id: 'options'
               type: 'all'
+              array: false
             ]
             chai.expect(message.data.payload.outPorts).to.eql [
               id: 'out'
               type: 'all'
+              array: false
             ]
             window.removeEventListener 'message', listener, false
             done()
