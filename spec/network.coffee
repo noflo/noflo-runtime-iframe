@@ -188,6 +188,7 @@ describe 'IFRAME network runtime', ->
           chai.expect(message.data.protocol).to.equal 'component'
           chai.expect(message.data.payload).to.be.an 'object'
           if message.data.payload.name is 'core/Output'
+            chai.expect(message.data.payload.icon).to.equal 'bug'
             chai.expect(message.data.payload.inPorts).to.eql [
               id: 'in'
               type: 'all'
