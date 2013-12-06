@@ -12,7 +12,7 @@
         this.send('network', 'error', {
           message: err.toString()
         }, {
-          href: context.parent.location.href
+          href: this.context ? this.context.href : context.parent.location.href
         });
         return true;
       }.bind(this);
@@ -28,6 +28,9 @@
         message: payload.toString()
       };
     }
+    if (this.context) {
+      ctx = this.context;
+    }
     context.parent.postMessage({
       protocol: protocol,
       command: topic,
@@ -39,9 +42,6 @@
   });
 
   context.addEventListener('message', function (message) {
-    if (message.origin !== context.parent.location.origin) {
-      return;
-    }
     if (!message.data.protocol) {
       return;
     }
@@ -49,7 +49,7 @@
       return;
     }
     runtime.receive(message.data.protocol, message.data.command, message.data.payload, {
-      href: context.parent.location.href
+      href: message.origin
     });
   });
 

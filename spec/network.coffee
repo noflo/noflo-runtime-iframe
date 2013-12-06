@@ -6,7 +6,7 @@ describe 'IFRAME network runtime', ->
       protocol: protocol
       command: command
       payload: payload
-    , iframe.location.href
+    , '*'
   receive = (expects, done) ->
     listener = (message) ->
       chai.expect(message).to.be.an 'object'
@@ -195,7 +195,7 @@ describe 'IFRAME network runtime', ->
               array: true
             ,
               id: 'options'
-              type: 'all'
+              type: 'object'
               array: false
             ]
             chai.expect(message.data.payload.outPorts).to.eql [
