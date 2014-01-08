@@ -28,6 +28,7 @@ describe 'IFRAME network runtime', ->
               component: 'core/Repeat'
               metadata:
                 hello: 'World'
+              graph: 'foo'
           ,
             protocol: 'graph'
             command: 'addnode'
@@ -35,10 +36,12 @@ describe 'IFRAME network runtime', ->
               id: 'Bar'
               component: 'core/Drop'
               metadata: {}
+              graph: 'foo'
         ]
         receive expects, done
         send 'graph', 'clear',
           baseDir: '/noflo-runtime-iframe'
+          id: 'foo'
         send 'graph', 'addnode', expects[0].payload
         send 'graph', 'addnode', expects[1].payload
     describe 'receiving an edge', ->
@@ -55,6 +58,7 @@ describe 'IFRAME network runtime', ->
               port: 'in'
             metadata:
               route: 5
+            graph: 'foo'
         ]
         receive expects, done
         send 'graph', 'addedge', expects[0].payload
@@ -70,6 +74,7 @@ describe 'IFRAME network runtime', ->
               node: 'Foo'
               port: 'in'
             metadata: {}
+            graph: 'foo'
         ]
         receive expects, done
         send 'graph', 'addinitial', expects[0].payload
@@ -87,6 +92,7 @@ describe 'IFRAME network runtime', ->
               port: 'in'
             metadata:
               route: 5
+            graph: 'foo'
         ,
           protocol: 'graph'
           command: 'removenode'
@@ -94,10 +100,12 @@ describe 'IFRAME network runtime', ->
             id: 'Bar'
             component: 'core/Drop'
             metadata: {}
+            graph: 'foo'
         ]
         receive expects, done
         send 'graph', 'removenode',
           id: 'Bar'
+          graph: 'foo'
     describe 'removing an IIP', ->
       it 'should provide the IIP back', (done) ->
         expects = [
@@ -110,12 +118,14 @@ describe 'IFRAME network runtime', ->
               node: 'Foo'
               port: 'in'
             metadata: {}
+            graph: 'foo'
         ]
         receive expects, done
         send 'graph', 'removeinitial',
           to:
             node: 'Foo'
             port: 'in'
+          graph: 'foo'
     describe 'renaming a node', ->
       it 'should send the renamenode event', (done) ->
         expects = [
@@ -124,11 +134,13 @@ describe 'IFRAME network runtime', ->
           payload:
             from: 'Foo'
             to: 'Baz'
+            graph: 'foo'
         ]
         receive expects, done
         send 'graph', 'renamenode',
           from: 'Foo'
           to: 'Baz'
+          graph: 'foo'
 
   describe 'Network protocol', ->
     # Set up a clean graph
@@ -142,14 +154,17 @@ describe 'IFRAME network runtime', ->
       window.addEventListener 'message', listener, false
       send 'graph', 'clear',
         baseDir: '/noflo-runtime-iframe'
+        id: 'bar'
       send 'graph', 'addnode',
         id: 'Hello'
         component: 'core/Repeat'
         metadata: {}
+        graph: 'bar'
       send 'graph', 'addnode',
         id: 'World'
         component: 'core/Drop'
         metadata: {}
+        graph: 'bar'
       send 'graph', 'addedge',
         from:
           node: 'Hello'
@@ -157,12 +172,14 @@ describe 'IFRAME network runtime', ->
         to:
           node: 'World'
           port: 'in'
+        graph: 'bar'
       send 'graph', 'addinitial',
         from:
           data: 'Hello, world!'
         to:
           node: 'Hello'
           port: 'in'
+        graph: 'bar'
     describe 'on starting the network', ->
       it 'should get started and stopped', (done) ->
         started = false
@@ -170,7 +187,9 @@ describe 'IFRAME network runtime', ->
           chai.expect(message).to.be.an 'object'
           chai.expect(message.data.protocol).to.equal 'network'
           if message.data.command is 'started'
-            chai.expect(message.data.payload).to.be.a 'date'
+            chai.expect(message.data.payload).to.be.an 'object'
+            chai.expect(message.data.payload.graph).to.equal 'bar'
+            chai.expect(message.data.payload.time).to.be.a 'date'
             started = true
           if message.data.command is 'stopped'
             chai.expect(started).to.equal true
@@ -179,6 +198,7 @@ describe 'IFRAME network runtime', ->
         window.addEventListener 'message', listener, false
         send 'network', 'start',
           baseDir: '/noflo-runtime-iframe'
+          graph: 'bar'
 
   describe 'Component protocol', ->
     describe 'on requesting a component list', ->
