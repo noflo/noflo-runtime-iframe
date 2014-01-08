@@ -23,7 +23,7 @@
     "grunt-coffeelint": "~0.0.6",
     "chai": "~1.5.0",
     "mocha": "~1.9.0",
-    "grunt-mocha-phantomjs": "~0.2.2",
+    "grunt-mocha-phantomjs": "~0.3.2",
     "component-builder": "git://github.com/bergie/builder.js.git#patch-1",
     "component": "~0.17.6",
     "component-json": "~0.1.4",
