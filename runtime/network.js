@@ -39,8 +39,12 @@
       payload: payload
     }, ctx.href);
   };
+  var catching = true;
+  if (context.location.search && context.location.search.substring(1) === 'debug') {
+    catching = false;
+  }
   var runtime = new Iframe({
-    catchExceptions: true
+    catchExceptions: catching
   });
 
   context.addEventListener('message', function (message) {
