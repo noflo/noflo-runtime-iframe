@@ -7,9 +7,10 @@ describe 'IFRAME network runtime', ->
       command: command
       payload: payload
     , '*'
-  receive = (expects, done) ->
+  receive = (protocol, expects, done) ->
     listener = (message) ->
       chai.expect(message).to.be.an 'object'
+      return if message.data.protocol isnt protocol
       expected = expects.shift()
       chai.expect(message.data).to.eql expected
       if expects.length is 0
@@ -38,7 +39,7 @@ describe 'IFRAME network runtime', ->
               metadata: {}
               graph: 'foo'
         ]
-        receive expects, done
+        receive 'graph', expects, done
         send 'graph', 'clear',
           baseDir: '/noflo-runtime-iframe'
           id: 'foo'
@@ -60,7 +61,7 @@ describe 'IFRAME network runtime', ->
               route: 5
             graph: 'foo'
         ]
-        receive expects, done
+        receive 'graph', expects, done
         send 'graph', 'addedge', expects[0].payload
     describe 'receiving an IIP', ->
       it 'should provide the IIP back', (done) ->
@@ -76,8 +77,28 @@ describe 'IFRAME network runtime', ->
             metadata: {}
             graph: 'foo'
         ]
-        receive expects, done
+        receive 'graph', expects, done
         send 'graph', 'addinitial', expects[0].payload
+    describe 'removing an IIP', ->
+      it 'should provide the IIP back', (done) ->
+        expects = [
+          protocol: 'graph'
+          command: 'removeinitial'
+          payload:
+            src:
+              data: 'Hello, world!'
+            tgt:
+              node: 'Foo'
+              port: 'in'
+            metadata: {}
+            graph: 'foo'
+        ]
+        receive 'graph', expects, done
+        send 'graph', 'removeinitial',
+          tgt:
+            node: 'Foo'
+            port: 'in'
+          graph: 'foo'
     describe 'removing a node', ->
       it 'should remove the node and its associated edges', (done) ->
         expects = [
@@ -102,29 +123,9 @@ describe 'IFRAME network runtime', ->
             metadata: {}
             graph: 'foo'
         ]
-        receive expects, done
+        receive 'graph', expects, done
         send 'graph', 'removenode',
           id: 'Bar'
-          graph: 'foo'
-    describe 'removing an IIP', ->
-      it 'should provide the IIP back', (done) ->
-        expects = [
-          protocol: 'graph'
-          command: 'removeinitial'
-          payload:
-            src:
-              data: 'Hello, world!'
-            tgt:
-              node: 'Foo'
-              port: 'in'
-            metadata: {}
-            graph: 'foo'
-        ]
-        receive expects, done
-        send 'graph', 'removeinitial',
-          tgt:
-            node: 'Foo'
-            port: 'in'
           graph: 'foo'
     describe 'renaming a node', ->
       it 'should send the renamenode event', (done) ->
@@ -136,7 +137,7 @@ describe 'IFRAME network runtime', ->
             to: 'Baz'
             graph: 'foo'
         ]
-        receive expects, done
+        receive 'graph', expects, done
         send 'graph', 'renamenode',
           from: 'Foo'
           to: 'Baz'
@@ -145,7 +146,7 @@ describe 'IFRAME network runtime', ->
   describe 'Network protocol', ->
     # Set up a clean graph
     beforeEach (done) ->
-      waitFor = 4
+      waitFor = 8
       listener = (message) ->
         waitFor--
         return if waitFor
