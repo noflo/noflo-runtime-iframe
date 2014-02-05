@@ -39,24 +39,25 @@
       payload: payload
     }, ctx.href);
   };
-  var catching = true;
-  if (context.location.search && context.location.search.substring(1) === 'debug') {
-    catching = false;
-  }
-  var runtime = new Iframe({
-    catchExceptions: catching
-  });
 
-  context.addEventListener('message', function (message) {
-    if (!message.data.protocol) {
-      return;
+  context.NofloIframeRuntime = function (options) {
+    if (typeof options.catchExceptions === 'undefined') {
+      options.catchExceptions = true;
+      if (context.location.search && context.location.search.substring(1) === 'debug') {
+        options.catchExceptions = false;
+      }
     }
-    if (!message.data.command) {
-      return;
-    }
-    runtime.receive(message.data.protocol, message.data.command, message.data.payload, {
-      href: message.origin
+    var runtime = new Iframe(options);
+    context.addEventListener('message', function (message) {
+      if (!message.data.protocol) {
+        return;
+      }
+      if (!message.data.command) {
+        return;
+      }
+      runtime.receive(message.data.protocol, message.data.command, message.data.payload, {
+        href: message.origin
+      });
     });
-  });
-
+  };
 })(window);
