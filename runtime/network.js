@@ -55,6 +55,10 @@
       if (!message.data.command) {
         return;
       }
+      if (message.data.protocol === 'iframe' && message.data.command === 'setcontent') {
+        document.body.innerHTML = message.data.payload;
+        return;
+      }
       runtime.receive(message.data.protocol, message.data.command, message.data.payload, {
         href: message.origin
       });
