@@ -17,6 +17,20 @@ describe 'IFRAME network runtime', ->
         window.removeEventListener 'message', listener, false
         done()
     window.addEventListener 'message', listener, false
+  describe 'Runtime Protocol', ->
+    describe 'requesting runtime metadata', ->
+      it 'should provide it back', (done) ->
+        listener = (message) ->
+          window.removeEventListener 'message', listener, false
+          msg = message.data
+          chai.expect(msg.protocol).to.equal 'runtime'
+          chai.expect(msg.command).to.equal 'runtime'
+          chai.expect(msg.payload).to.be.an 'object'
+          chai.expect(msg.payload.type).to.equal 'noflo-browser'
+          chai.expect(msg.payload.capabilities).to.be.an 'array'
+          done()
+        window.addEventListener 'message', listener, false
+        send 'runtime', 'getruntime', ''
 
   describe 'Graph Protocol', ->
     describe 'receiving a graph and nodes', ->
@@ -43,6 +57,7 @@ describe 'IFRAME network runtime', ->
         send 'graph', 'clear',
           baseDir: '/noflo-runtime-iframe'
           id: 'foo'
+          main: true
         send 'graph', 'addnode', expects[0].payload
         send 'graph', 'addnode', expects[1].payload
     describe 'receiving an edge', ->
@@ -146,7 +161,7 @@ describe 'IFRAME network runtime', ->
   describe 'Network protocol', ->
     # Set up a clean graph
     beforeEach (done) ->
-      waitFor = 8
+      waitFor = 4
       listener = (message) ->
         waitFor--
         return if waitFor
@@ -156,6 +171,7 @@ describe 'IFRAME network runtime', ->
       send 'graph', 'clear',
         baseDir: '/noflo-runtime-iframe'
         id: 'bar'
+        main: true
       send 'graph', 'addnode',
         id: 'Hello'
         component: 'core/Repeat'
@@ -183,6 +199,7 @@ describe 'IFRAME network runtime', ->
         graph: 'bar'
     describe 'on starting the network', ->
       it 'should get started and stopped', (done) ->
+        @timeout 15000
         started = false
         listener = (message) ->
           chai.expect(message).to.be.an 'object'
@@ -198,7 +215,6 @@ describe 'IFRAME network runtime', ->
             done()
         window.addEventListener 'message', listener, false
         send 'network', 'start',
-          baseDir: '/noflo-runtime-iframe'
           graph: 'bar'
 
   describe 'Component protocol', ->
@@ -213,16 +229,22 @@ describe 'IFRAME network runtime', ->
             chai.expect(message.data.payload.inPorts).to.eql [
               id: 'in'
               type: 'all'
-              array: true
+              required: true
+              addressable: true
+              description: ''
             ,
               id: 'options'
               type: 'object'
-              array: false
+              required: true
+              addressable: false
+              description: ''
             ]
             chai.expect(message.data.payload.outPorts).to.eql [
               id: 'out'
               type: 'all'
-              array: false
+              required: true
+              addressable: false
+              description: ''
             ]
             window.removeEventListener 'message', listener, false
             done()
