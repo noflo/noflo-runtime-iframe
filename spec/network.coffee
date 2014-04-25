@@ -234,12 +234,16 @@ describe 'IFRAME network runtime', ->
               required: true
               addressable: true
               description: ''
+              values: undefined
+              default: undefined
             ,
               id: 'options'
               type: 'object'
               required: true
               addressable: false
               description: ''
+              values: undefined
+              default: undefined
             ]
             chai.expect(message.data.payload.outPorts).to.eql [
               id: 'out'
