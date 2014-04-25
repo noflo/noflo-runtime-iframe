@@ -72,6 +72,7 @@ describe 'IFRAME network runtime', ->
             tgt:
               node: 'Bar'
               port: 'in'
+              index: 2
             metadata:
               route: 5
             graph: 'foo'
@@ -126,6 +127,7 @@ describe 'IFRAME network runtime', ->
             tgt:
               node: 'Bar'
               port: 'in'
+              index: 2
             metadata:
               route: 5
             graph: 'foo'
