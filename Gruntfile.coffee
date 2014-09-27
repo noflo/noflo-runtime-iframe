@@ -15,11 +15,10 @@ module.exports = ->
         ext: '.js'
 
     # Browser version building
-    exec:
-      install:
-        command: './node_modules/.bin/component install -d'
+    noflo_browser:
       build:
-        command: './node_modules/.bin/component build -u component-json,component-coffee -o browser -n noflo-runtime-iframe -d'
+        files:
+          'browser/noflo-runtime-iframe.js': ['component.json']
 
     # Automated recompilation and testing when developing
     watch:
@@ -39,7 +38,7 @@ module.exports = ->
 
   # Grunt plugins used for building
   @loadNpmTasks 'grunt-contrib-coffee'
-  @loadNpmTasks 'grunt-exec'
+  @loadNpmTasks 'grunt-noflo-browser'
 
   # Grunt plugins used for testing
   @loadNpmTasks 'grunt-contrib-watch'
@@ -47,6 +46,6 @@ module.exports = ->
   @loadNpmTasks 'grunt-coffeelint'
 
   # Our local tasks
-  @registerTask 'build', ['exec']
-  @registerTask 'test', ['coffeelint', 'build', 'coffee', 'mocha_phantomjs']
+  @registerTask 'build', ['noflo_browser']
+  @registerTask 'test', ['coffeelint', 'noflo_browser', 'coffee', 'mocha_phantomjs']
   @registerTask 'default', ['test']
