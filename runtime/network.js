@@ -39,6 +39,9 @@
       payload: payload
     }, ctx.href);
   };
+  Iframe.prototype.sendAll = function (protocol, topic, payload) {
+    this.send(protocol, topic, payload, window.context);
+  };
 
   context.NofloIframeRuntime = function (options) {
     if (typeof options.catchExceptions === 'undefined') {
