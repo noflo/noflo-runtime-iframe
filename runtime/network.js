@@ -42,6 +42,9 @@
   Iframe.prototype.sendAll = function (protocol, topic, payload) {
     this.send(protocol, topic, payload, window.context);
   };
+  Iframe.prototype.start = function () {
+    // Ignored, nothing to do
+  };
 
   context.NofloIframeRuntime = function (options) {
     if (typeof options.catchExceptions === 'undefined') {
@@ -66,5 +69,6 @@
         href: message.origin
       });
     });
+    return runtime;
   };
 })(window);
