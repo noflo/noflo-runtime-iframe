@@ -12,7 +12,11 @@ describe 'IFRAME network runtime', ->
       chai.expect(message).to.be.an 'object'
       return if message.data.protocol isnt protocol
       expected = expects.shift()
-      chai.expect(message.data).to.eql expected
+      return done() unless expected
+      unless expected.payload
+        chai.expect(message.data.command).to.equal expected.command
+      else
+        chai.expect(message.data).to.eql expected
       if expects.length is 0
         window.removeEventListener 'message', listener, false
         done()
@@ -37,6 +41,9 @@ describe 'IFRAME network runtime', ->
       it 'should provide the nodes back', (done) ->
         expects = [
             protocol: 'graph'
+            command: 'clear'
+         ,
+            protocol: 'graph'
             command: 'addnode'
             payload:
               id: 'Foo'
@@ -58,8 +65,8 @@ describe 'IFRAME network runtime', ->
           baseDir: '/noflo-runtime-iframe'
           id: 'foo'
           main: true
-        send 'graph', 'addnode', expects[0].payload
         send 'graph', 'addnode', expects[1].payload
+        send 'graph', 'addnode', expects[2].payload
     describe 'receiving an edge', ->
       it 'should provide the edge back', (done) ->
         expects = [
@@ -119,6 +126,9 @@ describe 'IFRAME network runtime', ->
       it 'should remove the node and its associated edges', (done) ->
         expects = [
           protocol: 'graph'
+          command: 'changeedge'
+        ,
+          protocol: 'graph'
           command: 'removeedge'
           payload:
             src:
@@ -131,6 +141,9 @@ describe 'IFRAME network runtime', ->
             metadata:
               route: 5
             graph: 'foo'
+        ,
+          protocol: 'graph'
+          command: 'changenode'
         ,
           protocol: 'graph'
           command: 'removenode'
@@ -231,26 +244,26 @@ describe 'IFRAME network runtime', ->
             chai.expect(message.data.payload.inPorts).to.eql [
               id: 'in'
               type: 'all'
-              required: true
-              addressable: true
-              description: ''
+              required: false
+              addressable: false
+              description: 'Packet to be printed through console.log'
               values: undefined
               default: undefined
             ,
               id: 'options'
               type: 'object'
-              required: true
+              required: false
               addressable: false
-              description: ''
+              description: 'Options to be passed to console.log'
               values: undefined
               default: undefined
             ]
             chai.expect(message.data.payload.outPorts).to.eql [
               id: 'out'
               type: 'all'
-              required: true
+              required: false
               addressable: false
-              description: ''
+              description: undefined
             ]
             window.removeEventListener 'message', listener, false
             done()
