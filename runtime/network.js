@@ -20,8 +20,22 @@
       };
     }
 
+    if (!options.defaultPermissions) {
+      // The iframe runtime is run on user's own computer, so default to all access allowed
+      options.defaultPermissions = [
+        'protocol:graph',
+        'protocol:component',
+        'protocol:network',
+        'protocol:runtime',
+        'component:setsource',
+        'component:getsource'
+      ];
+    }
+
     this.prototype.constructor.apply(this, arguments);
     this.receive = this.prototype.receive;
+    this.canDo = this.prototype.canDo;
+    this.getPermitted = this.prototype.getPermitted;
   };
   Iframe.prototype = Base;
   Iframe.prototype.send = function (protocol, topic, payload, ctx) {
