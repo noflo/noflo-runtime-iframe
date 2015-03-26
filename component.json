@@ -19,8 +19,6 @@
     "component.json"
   ],
   "files": [
-    "runtime/component.js",
-    "html/component.html",
     "runtime/network.js",
     "html/network.html"
   ]
