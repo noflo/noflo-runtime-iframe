@@ -69,17 +69,23 @@
     }
     var runtime = new Iframe(options);
     context.addEventListener('message', function (message) {
-      if (!message.data.protocol) {
+      var data;
+      if (typeof message.data === 'string') {
+        data = JSON.parse(message.data);
+      } else {
+        data = message.data;
+      }
+      if (!data.protocol) {
         return;
       }
-      if (!message.data.command) {
+      if (!data.command) {
         return;
       }
-      if (message.data.protocol === 'iframe' && message.data.command === 'setcontent') {
-        document.body.innerHTML = message.data.payload;
+      if (data.protocol === 'iframe' && data.command === 'setcontent') {
+        document.body.innerHTML = data.payload;
         return;
       }
-      runtime.receive(message.data.protocol, message.data.command, message.data.payload, {
+      runtime.receive(data.protocol, data.command, data.payload, {
         href: message.origin
       });
     });
