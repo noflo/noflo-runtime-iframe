@@ -47,11 +47,11 @@
     if (this.context) {
       ctx = this.context;
     }
-    context.parent.postMessage({
+    context.parent.postMessage(JSON.stringify({
       protocol: protocol,
       command: topic,
       payload: payload
-    }, ctx.href);
+    }), ctx.href);
   };
   Iframe.prototype.sendAll = function (protocol, topic, payload) {
     this.send(protocol, topic, payload, window.context);
