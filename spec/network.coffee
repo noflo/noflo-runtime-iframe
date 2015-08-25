@@ -254,23 +254,18 @@ describe 'IFRAME network runtime', ->
               required: false
               addressable: false
               description: 'Packet to be printed through console.log'
-              values: undefined
-              default: undefined
             ,
               id: 'options'
               type: 'object'
               required: false
               addressable: false
               description: 'Options to be passed to console.log'
-              values: undefined
-              default: undefined
             ]
             chai.expect(msg.payload.outPorts).to.eql [
               id: 'out'
               type: 'all'
               required: false
               addressable: false
-              description: undefined
             ]
             window.removeEventListener 'message', listener, false
             done()
