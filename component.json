@@ -12,8 +12,9 @@
     "noflo/noflo-core": "*",
     "noflo/noflo-flow": "*"
   },
+  "main": "runtime/network.js",
   "scripts": [
-    "index.js"
+    "runtime/network.js"
   ],
   "json": [
     "component.json"
