@@ -1,32 +1,37 @@
 describe 'IFRAME network runtime', ->
   iframe = document.getElementById('network').contentWindow
   origin = window.location.origin
+
   send = (protocol, command, payload) ->
-    iframe.postMessage
+    msg =
       protocol: protocol
       command: command
       payload: payload
-    , '*'
+    serialized = JSON.stringify msg
+    iframe.postMessage serialized, '*'
   receive = (protocol, expects, done) ->
     listener = (message) ->
-      chai.expect(message).to.be.an 'object'
-      return if message.data.protocol isnt protocol
+      msg = JSON.parse message.data
+      return if msg.protocol isnt protocol
       expected = expects.shift()
       return done() unless expected
       unless expected.payload
-        chai.expect(message.data.command).to.equal expected.command
+        chai.expect(msg.command).to.equal expected.command
       else
-        chai.expect(message.data).to.eql expected
+        chai.expect(msg).to.eql expected
       if expects.length is 0
         window.removeEventListener 'message', listener, false
         done()
     window.addEventListener 'message', listener, false
+
   describe 'Runtime Protocol', ->
     describe 'requesting runtime metadata', ->
       it 'should provide it back', (done) ->
         listener = (message) ->
+          #console.log 'got message', message
           window.removeEventListener 'message', listener, false
           msg = message.data
+          msg = JSON.parse msg
           chai.expect(msg.protocol).to.equal 'runtime'
           chai.expect(msg.command).to.equal 'runtime'
           chai.expect(msg.payload).to.be.an 'object'
@@ -217,14 +222,15 @@ describe 'IFRAME network runtime', ->
         @timeout 15000
         started = false
         listener = (message) ->
-          chai.expect(message).to.be.an 'object'
-          chai.expect(message.data.protocol).to.equal 'network'
-          if message.data.command is 'started'
-            chai.expect(message.data.payload).to.be.an 'object'
-            chai.expect(message.data.payload.graph).to.equal 'bar'
-            chai.expect(message.data.payload.time).to.be.a 'date'
+          msg = JSON.parse message.data
+
+          chai.expect(msg.protocol).to.equal 'network'
+          if msg.command is 'started'
+            chai.expect(msg.payload).to.be.an 'object'
+            chai.expect(msg.payload.graph).to.equal 'bar'
+            #chai.expect(msg.payload.time).to.be.a 'date'
             started = true
-          if message.data.command is 'stopped'
+          if msg.command is 'stopped'
             chai.expect(started).to.equal true
             window.removeEventListener 'message', listener, false
             done()
@@ -236,12 +242,13 @@ describe 'IFRAME network runtime', ->
     describe 'on requesting a component list', ->
       it 'should receive some known components', (done) ->
         listener = (message) ->
-          chai.expect(message).to.be.an 'object'
-          chai.expect(message.data.protocol).to.equal 'component'
-          chai.expect(message.data.payload).to.be.an 'object'
-          if message.data.payload.name is 'core/Output'
-            chai.expect(message.data.payload.icon).to.equal 'bug'
-            chai.expect(message.data.payload.inPorts).to.eql [
+          msg = JSON.parse message.data
+
+          chai.expect(msg.protocol).to.equal 'component'
+          chai.expect(msg.payload).to.be.an 'object'
+          if msg.payload.name is 'core/Output'
+            chai.expect(msg.payload.icon).to.equal 'bug'
+            chai.expect(msg.payload.inPorts).to.eql [
               id: 'in'
               type: 'all'
               required: false
@@ -258,7 +265,7 @@ describe 'IFRAME network runtime', ->
               values: undefined
               default: undefined
             ]
-            chai.expect(message.data.payload.outPorts).to.eql [
+            chai.expect(msg.payload.outPorts).to.eql [
               id: 'out'
               type: 'all'
               required: false
