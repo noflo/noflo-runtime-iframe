@@ -37,12 +37,13 @@ module.exports = ->
         options:
           output: 'spec/result.xml'
           reporter: 'spec'
-          failWithOutput: true
           urls: ['http://localhost:8000/spec/runner.html']
+          failWithOutput: true
 
     # Coding standards
     coffeelint:
       components: ['components/*.coffee']
+      spec: ['spec/*.coffee']
 
   # Grunt plugins used for building
   @loadNpmTasks 'grunt-contrib-coffee'
