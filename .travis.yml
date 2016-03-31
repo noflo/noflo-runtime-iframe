@@ -1,5 +1,13 @@
 language: node_js
 node_js:
-  - '4.2'
+- '4.2'
 before_script:
-  - npm install -g grunt-cli
+- npm install -g grunt-cli
+deploy:
+  provider: npm
+  email: henri.bergius@iki.fi
+  api_key:
+    secure: khHxD/tjL+vuHYXCL/BRdINnpLihpjOmhs7hqlBclZD5pnQdv7oLPdB39PhDetqeydlrlUEXBLaHZ7JkaUNFbwtir3Qj2b4Vkb93zSE01AKULrJjAPWEt0xEBkiXS69LvLZQSLYkbEJHoxZ2XypMYCXJd2uA9QaqxLcW2md/3uU=
+  on:
+    tags: true
+    repo: noflo/noflo-runtime-iframe
