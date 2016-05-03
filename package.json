@@ -13,15 +13,15 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "chai": "3.5.0",
-    "grunt": "0.4.5",
-    "grunt-coffeelint": "0.0.15",
-    "grunt-contrib-coffee": "1.0.0",
+    "chai": "^3.5.0",
+    "grunt": "^0.4.5",
+    "grunt-coffeelint": "^0.0.15",
+    "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-connect": "^1.0.1",
-    "grunt-contrib-watch": "1.0.0",
-    "grunt-mocha-phantomjs": "3.0.0",
-    "grunt-noflo-browser": "0.1.17",
-    "mocha": "2.4.5"
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-phantomjs": "^3.0.0",
+    "grunt-noflo-browser": "^0.1.17",
+    "mocha": "^2.4.5"
   },
   "keywords": [],
   "scripts": {
