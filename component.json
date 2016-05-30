@@ -3,7 +3,7 @@
   "description": "NoFlo runtime for execution inside an iframe",
   "author": "Henri Bergius <henri.bergius@iki.fi>",
   "repo": "noflo/noflo-runtime-iframe",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "keywords": [
   ],
   "dependencies": {
