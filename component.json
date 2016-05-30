@@ -8,9 +8,8 @@
   ],
   "dependencies": {
     "noflo/noflo": "*",
-    "noflo/noflo-runtime-base": "*",
-    "noflo/noflo-core": "*",
-    "noflo/noflo-flow": "*"
+    "noflo/noflo-runtime-base": "0.7.4",
+    "noflo/noflo-core": "*"
   },
   "main": "runtime/network.js",
   "scripts": [
