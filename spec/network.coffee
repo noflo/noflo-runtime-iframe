@@ -221,9 +221,6 @@ describe 'IFRAME network runtime', ->
         @timeout 15000
         expected = [
           protocol: 'network'
-          command: 'stopped'
-        ,
-          protocol: 'network'
           command: 'started'
         ,
           protocol: 'network'
