@@ -12,9 +12,6 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <div id="fixtures">
-      <iframe sandbox="allow-scripts" src="../html/network.html?debug" id="network"></iframe>
-    </div>
     <script src="../browser/noflo-runtime-iframe.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
@@ -25,6 +22,9 @@
       mocha.setup('bdd');
     </script>
     <script src="./network.js"></script>
+    <div id="fixtures">
+      <iframe sandbox="allow-scripts" src="../html/network.html?debug" id="network"></iframe>
+    </div>
     <script>
       mocha.run();
     </script>

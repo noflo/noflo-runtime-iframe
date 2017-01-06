@@ -1,6 +1,6 @@
 describe 'IFRAME network runtime', ->
-  iframe = document.getElementById('network').contentWindow
-  origin = window.location.origin
+  iframe = null
+  origin = null
 
   send = (protocol, command, payload) ->
     msg =
@@ -23,6 +23,12 @@ describe 'IFRAME network runtime', ->
         window.removeEventListener 'message', listener, false
         done()
     window.addEventListener 'message', listener, false
+  before (done) ->
+    iframeElement = document.getElementById 'network'
+    iframe = iframeElement.contentWindow
+    origin = window.location.origin
+    iframeElement.onload = ->
+      done()
 
   describe 'Runtime Protocol', ->
     describe 'requesting runtime metadata', ->
@@ -242,6 +248,9 @@ describe 'IFRAME network runtime', ->
           command: 'disconnect'
         ,
           protocol: 'network'
+          command: 'started'
+        ,
+          protocol: 'network'
           command: 'stopped'
         ]
         receive 'network', expected, done
@@ -251,32 +260,39 @@ describe 'IFRAME network runtime', ->
   describe 'Component protocol', ->
     describe 'on requesting a component list', ->
       it 'should receive some known components', (done) ->
+        received = 0
         listener = (message) ->
           msg = JSON.parse message.data
+          return unless msg.protocol is 'component'
 
-          chai.expect(msg.protocol).to.equal 'component'
-          chai.expect(msg.payload).to.be.an 'object'
-          if msg.payload.name is 'core/Output'
-            chai.expect(msg.payload.icon).to.equal 'bug'
-            chai.expect(msg.payload.inPorts).to.eql [
-              id: 'in'
-              type: 'all'
-              required: false
-              addressable: false
-              description: 'Packet to be printed through console.log'
-            ,
-              id: 'options'
-              type: 'object'
-              required: false
-              addressable: false
-              description: 'Options to be passed to console.log'
-            ]
-            chai.expect(msg.payload.outPorts).to.eql [
-              id: 'out'
-              type: 'all'
-              required: false
-              addressable: false
-            ]
+          if msg.command is 'component'
+            chai.expect(msg.payload).to.be.an 'object'
+            received++
+
+            if msg.payload.name is 'core/Output'
+              chai.expect(msg.payload.icon).to.equal 'bug'
+              chai.expect(msg.payload.inPorts).to.eql [
+                id: 'in'
+                type: 'all'
+                required: false
+                addressable: false
+                description: 'Packet to be printed through console.log'
+              ,
+                id: 'options'
+                type: 'object'
+                required: false
+                addressable: false
+                description: 'Options to be passed to console.log'
+              ]
+              chai.expect(msg.payload.outPorts).to.eql [
+                id: 'out'
+                type: 'all'
+                required: false
+                addressable: false
+              ]
+          if msg.command is 'componentsready'
+            chai.expect(msg.payload).to.equal received
+            chai.expect(received).to.be.above 5
             window.removeEventListener 'message', listener, false
             done()
         window.addEventListener 'message', listener, false
