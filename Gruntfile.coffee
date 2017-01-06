@@ -17,6 +17,10 @@ module.exports = ->
     # Browser version building
     noflo_browser:
       build:
+        options:
+          exposed_modules:
+            'noflo': 'noflo'
+            'noflo-runtime-base': 'noflo-runtime-base'
         files:
           'browser/noflo-runtime-iframe.js': ['component.json']
 
