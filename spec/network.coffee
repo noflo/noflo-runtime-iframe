@@ -123,7 +123,6 @@ describe 'IFRAME network runtime', ->
             tgt:
               node: 'Foo'
               port: 'in'
-            metadata: {}
             graph: 'foo'
         ]
         receive 'graph', expects, done
@@ -148,8 +147,6 @@ describe 'IFRAME network runtime', ->
               node: 'Bar'
               port: 'in'
               index: 2
-            metadata:
-              route: 5
             graph: 'foo'
         ,
           protocol: 'graph'
@@ -159,8 +156,6 @@ describe 'IFRAME network runtime', ->
           command: 'removenode'
           payload:
             id: 'Bar'
-            component: 'core/Drop'
-            metadata: {}
             graph: 'foo'
         ]
         receive 'graph', expects, done
