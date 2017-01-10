@@ -16,6 +16,7 @@
         }, {
           href: self.context ? self.context.href : context.parent.location.href
         });
+        console.error(err);
         return true;
       };
     }
@@ -52,6 +53,7 @@
       command: topic,
       payload: payload
     }), ctx.href);
+    this.prototype.send.apply(this, arguments);
   };
   Iframe.prototype.sendAll = function (protocol, topic, payload) {
     this.send(protocol, topic, payload, window.context);
