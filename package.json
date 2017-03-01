@@ -30,7 +30,7 @@
     "grunt-noflo-browser": "^1.1.1",
     "json-loader": "^0.5.4",
     "mocha": "^3.2.0",
-    "noflo-core": "^0.2.2"
+    "noflo-core": "^0.3.1"
   },
   "keywords": [
     "noflo"
