@@ -228,9 +228,6 @@ describe 'IFRAME network runtime', ->
           command: 'connect'
         ,
           protocol: 'network'
-          command: 'data'
-        ,
-          protocol: 'network'
           command: 'connect'
         ,
           protocol: 'network'
@@ -240,10 +237,10 @@ describe 'IFRAME network runtime', ->
           command: 'disconnect'
         ,
           protocol: 'network'
-          command: 'disconnect'
+          command: 'data'
         ,
           protocol: 'network'
-          command: 'started'
+          command: 'disconnect'
         ,
           protocol: 'network'
           command: 'stopped'
