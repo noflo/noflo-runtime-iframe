@@ -20,9 +20,9 @@ module.exports = ->
         options:
           exposed_modules:
             'noflo': 'noflo'
-            'noflo-runtime-base': 'noflo-runtime-base'
+            'noflo-runtime-postmessage': 'noflo-runtime-postmessage'
         files:
-          'browser/noflo-runtime-iframe.js': ['component.json']
+          'browser/noflo-runtime-iframe.js': ['package.json']
 
     # Automated recompilation and testing when developing
     watch:
