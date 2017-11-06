@@ -17,12 +17,8 @@ module.exports = ->
     # Browser version building
     noflo_browser:
       build:
-        options:
-          exposed_modules:
-            'noflo': 'noflo'
-            'noflo-runtime-postmessage': 'noflo-runtime-postmessage'
         files:
-          'browser/noflo-runtime-iframe.js': ['package.json']
+          'browser/noflo-runtime-iframe.js': ['webpack.entry.js']
 
     # Automated recompilation and testing when developing
     watch:
